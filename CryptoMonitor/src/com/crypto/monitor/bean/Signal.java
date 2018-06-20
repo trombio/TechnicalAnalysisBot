@@ -19,9 +19,8 @@ import com.crypto.jmes.bean.TrendIndicator;
 public class Signal {
 	
 	private String symbol;
-	private String highestVolume;
-	private String averageVolume;
 	
+	private VolumeAnalysis volumeAnalysis;
 	private List<TrendIndicator> indicators;
 	
 	public Signal(){
@@ -40,28 +39,16 @@ public class Signal {
 		this.symbol = symbol;
 	}
 
-	public String getHighestVolume() {
-		return highestVolume;
-	}
-
-	public void setHighestVolume(String highestVolume) {
-		this.highestVolume = highestVolume;
-	}
-
-	public String getAverageVolume() {
-		return averageVolume;
-	}
-
-	public void setAverageVolume(String averageVolume) {
-		this.averageVolume = averageVolume;
-	}
-
-	public List<TrendIndicator> getIndicators() {
+	public List<TrendIndicator> getTrendIndicators() {
 		return indicators;
 	}
 
 	public void setIndicators(List<TrendIndicator> indicators) {
 		this.indicators = indicators;
+	}
+	
+	public void addTrendIndicator(TrendIndicator trend) {
+		indicators.add(trend);	
 	}
 
 }
