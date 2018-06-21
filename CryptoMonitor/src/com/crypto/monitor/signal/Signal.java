@@ -18,16 +18,16 @@ import com.crypto.jmes.bean.VolumeAnalysis;
  *
  */
 public class Signal {
-	
+
 	private String symbol;
-	
+
 	private VolumeAnalysis volumeAnalysis;
 	private List<TrendIndicator> indicators;
-	
+
 	public Signal(){
 		indicators = new ArrayList<TrendIndicator>();
 	}
-	
+
 	public void addIndicator(TrendIndicator indicator){
 		indicators.add(indicator);
 	}
@@ -47,9 +47,24 @@ public class Signal {
 	public void setIndicators(List<TrendIndicator> indicators) {
 		this.indicators = indicators;
 	}
-	
+
 	public void addTrendIndicator(TrendIndicator trend) {
-		indicators.add(trend);	
+		indicators.add(trend);
 	}
+
+	public VolumeAnalysis getVolumeAnalysis() {
+		return volumeAnalysis;
+	}
+
+	public void setVolumeAnalysis(VolumeAnalysis volumeAnalysis) {
+		this.volumeAnalysis = volumeAnalysis;
+	}
+
+	@Override
+	public String toString() {
+		return "Signal [symbol=" + symbol + ", volumeAnalysis=" + volumeAnalysis + ", indicators=" + indicators + "]";
+	}
+
+
 
 }
