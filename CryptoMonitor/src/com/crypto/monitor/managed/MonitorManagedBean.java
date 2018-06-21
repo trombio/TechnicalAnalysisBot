@@ -47,6 +47,7 @@ public class MonitorManagedBean implements Serializable{
 		indicators.put("EMA 100", new ExponentialMovingAverageIndicator(100));
 		indicators.put("EMA 200", new ExponentialMovingAverageIndicator(200));
 		
+		//Se hace para tener seleccionados todos por default
 		checkIndicators = new ArrayList<>(indicators.keySet());
 		selectedIndicators = new ArrayList<>(indicators.keySet());
 	}
