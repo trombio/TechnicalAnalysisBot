@@ -15,45 +15,48 @@ import org.springframework.stereotype.Component;
 
 import com.crypto.jmes.ta.ExponentialMovingAverageIndicator;
 import com.crypto.jmes.ta.TAIndicator;
+import com.crypto.jmes.util.Interval;
 import com.crypto.monitor.service.MonitorService;
 import com.crypto.monitor.signal.Signal;
+import com.crypto.monitor.util.MonitorConstants;
 
 @Component
 @ManagedBean(name="monitorBinance")
 @SessionScoped
 public class MonitorManagedBean implements Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String pair;
+
 	private List<Signal> signals;
-	private Map<String, TAIndicator> indicators;
-	
+
 	private List<String> checkIndicators;
 	private List<String> selectedIndicators;
-	
+
 	@ManagedProperty(value="#{monitorService}")
 	private MonitorService monitorService;
-	
+
 	@PostConstruct
 	public void init() {
-		//Definimos cuales indicadores mostraremos en pantalla
-		indicators = new HashMap<String, TAIndicator>();
-		indicators.put("EMA 9", new ExponentialMovingAverageIndicator(9));
-		indicators.put("EMA 20", new ExponentialMovingAverageIndicator(20));
-		indicators.put("EMA 50", new ExponentialMovingAverageIndicator(50));
-		indicators.put("EMA 100", new ExponentialMovingAverageIndicator(100));
-		indicators.put("EMA 200", new ExponentialMovingAverageIndicator(200));
-		
 		//Se hace para tener seleccionados todos por default
-		checkIndicators = new ArrayList<>(indicators.keySet());
-		selectedIndicators = new ArrayList<>(indicators.keySet());
+		checkIndicators = new ArrayList<>(MonitorConstants.DEFAULT_INDICATORS.keySet());
+		selectedIndicators = new ArrayList<>(MonitorConstants.DEFAULT_INDICATORS.keySet());
 	}
-	
+
 	public void execute() {
-		
+		List<TAIndicator> indicators = new ArrayList<>();
+		for(String s : selectedIndicators){
+			indicators.add(MonitorConstants.DEFAULT_INDICATORS.get(s));
+		}
+		TAIndicator[] array = new TAIndicator[selectedIndicators.size()];
+		array = indicators.toArray(array);
+
+		signals = monitorService.getCryptoSignals(pair, Interval.FOUR_HOUR,
+				array);
+
 	}
 
 	public MonitorService getMonitorService() {
