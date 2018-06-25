@@ -7,29 +7,40 @@
 <h:head>
 <!-- html source code -->
 </h:head>
+<body>
 <h3><p:outputLabel value="Monitor Crypto"></p:outputLabel></h3>
+
+<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide();"/>
+
+<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+	<h:outputLabel value="Cargando"></h:outputLabel>
+</p:dialog>
+
 <h:form>
 <div align="center">
 <p:panelGrid columns="2" columnClasses="label, value">
-	<p:outputLabel value="Seleccione el par:" for="pairs"></p:outputLabel>
+	<p:outputLabel value="Pair:" for="pairs"></p:outputLabel>
 	<p:selectOneButton id="pairs" value="#{monitorBinance.pair}">
 		<f:selectItem itemLabel="BTC" itemValue="BTC"></f:selectItem>
 		<f:selectItem itemLabel="ETH" itemValue="ETH"></f:selectItem>
 		<f:selectItem itemLabel="BNB" itemValue="BNB"></f:selectItem>
+		<f:validateRequired />
 	</p:selectOneButton>
-	
-	<p:outputLabel value="Fimeframe" for="interval"></p:outputLabel>
-	<p:selectOneButton id="interval" value="#{monitorBinance.interval}">
+
+	<p:outputLabel value="Timeframe" for="interval"></p:outputLabel>
+	<p:selectOneButton id="interval" value="#{monitorBinance.interval}" required="true" requiredMessage="Firstname Can not be Blank">
 		<f:selectItems value="#{monitorBinance.intervals}" var="i" itemValue="#{i}" itemLabel="#{i}"></f:selectItems>
+		<f:validateRequired />
 	</p:selectOneButton>
-	
+
 	<p:outputLabel value="Seleccione los indicadores" for="indicators"/>
 	<p:selectManyCheckbox id="indicators" value="#{monitorBinance.selectedIndicators}">
 		<f:selectItems value="#{monitorBinance.checkIndicators}" var="i" itemValue="#{i}" itemLabel="#{i}"></f:selectItems>
-	</p:selectManyCheckbox>	
+	</p:selectManyCheckbox>
 </p:panelGrid>
 <p:commandButton value="Ver" actionListener="#{monitorBinance.execute}" update="signals"></p:commandButton>
 </div>
+<br/>
 <div align="center">
 <p:scrollPanel id="signals" style="width:90%;height:500px">
 	<div align="center">
@@ -45,11 +56,23 @@
 			</p:row>
 			<p:row>
 				<p:column>Last:</p:column>
-				<p:column><p:outputLabel value="#{signal.volumeAnalysis.avgVolume}"/></p:column>
+				<p:column>
+					<p:outputLabel value="#{signal.volumeAnalysis.avgVolume}">
+						<f:convertNumber groupingUsed="true" minFractionDigits="2" />
+					</p:outputLabel>
+				</p:column>
 				<p:column>Average:</p:column>
-				<p:column><p:outputLabel value="#{signal.volumeAnalysis.lastVolume}"/></p:column>
+				<p:column>
+					<p:outputLabel value="#{signal.volumeAnalysis.lastVolume}">
+						<f:convertNumber groupingUsed="true" minFractionDigits="2" />
+					</p:outputLabel>
+				</p:column>
 				<p:column>Highest:</p:column>
-				<p:column><p:outputLabel value="#{signal.volumeAnalysis.highestVolume}"/></p:column>
+				<p:column>
+					<p:outputLabel value="#{signal.volumeAnalysis.highestVolume}">
+						<f:convertNumber groupingUsed="true" minFractionDigits="2" />
+					</p:outputLabel>
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column colspan="3"><center><b>Bullish</b></center></p:column>
@@ -58,12 +81,18 @@
 			<p:row>
 				<p:column colspan="3">
 					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
-						<p:outputLabel value="#{trend.name}"/> : <p:outputLabel value="#{trend.value}"/>
+						<p:outputLabel value="#{trend.name}"/> :
+						<p:outputLabel value="#{trend.value}">
+							<f:convertNumber  maxFractionDigits="8" />
+						</p:outputLabel>
 					</ui:repeat>
 				</p:column>
 				<p:column colspan="3">
 					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
-						<p:outputLabel value="#{trend.name}"/> : <p:outputLabel value="#{trend.value}"/>
+						<p:outputLabel value="#{trend.name}"/> :
+						<p:outputLabel value="#{trend.value}">
+							<f:convertNumber  maxFractionDigits="8" />
+						</p:outputLabel>
 					</ui:repeat>
 				</p:column>
 			</p:row>
@@ -73,6 +102,7 @@
 	</div>
 </p:scrollPanel>
 </div>
-</h:form>
 
+</h:form>
+</body>
 </html>
