@@ -10,6 +10,10 @@ public interface ExchangeService {
 	
 	public List<Bar> getCandles(String symbol, Interval interval);
 	
+	public List<Bar> getCandles(String symbol, Interval interval, int since);
+	
 	public List<String> getAllAvailableSymbols();
+	
+	public List<String> getAllAvailableSymbols(String pair);
 
 }

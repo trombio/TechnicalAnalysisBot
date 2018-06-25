@@ -10,6 +10,8 @@ public interface ExchangeDAO {
 	
 	public List<Bar> getSymbolInfo(String symbol, Interval interval);
 	
+	public List<Bar> getSymbolInfo(String symbol, Interval interva, int since);
+	
 	public List<String> getAvailableSymbols();
 
 }

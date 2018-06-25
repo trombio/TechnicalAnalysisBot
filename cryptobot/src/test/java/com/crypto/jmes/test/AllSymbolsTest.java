@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseTimeSeries;
@@ -28,6 +29,7 @@ public class AllSymbolsTest {
 		taService = new TechnicalAnalysisServiceImpl();
 	}
 	
+	@Ignore
 	@Test
 	public void analyseAllSymbolsTest(){
 		List<String> symbols = service.getAllAvailableSymbols();
@@ -49,6 +51,13 @@ public class AllSymbolsTest {
 				System.out.println();
 			}
 		}
+	}
+	
+	@Test
+	public void filterSymbols() {
+		List<String> symbols = service.getAllAvailableSymbols("BTC");
+		System.out.println(symbols);
+		
 	}
 
 }

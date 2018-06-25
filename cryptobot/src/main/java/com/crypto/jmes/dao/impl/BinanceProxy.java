@@ -1,5 +1,7 @@
 package com.crypto.jmes.dao.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.ta4j.core.Bar;
@@ -19,7 +21,8 @@ public class BinanceProxy implements ExchangeDAO{
 	
 	private BinanceDAO binanceDao;
 	private SerializeUtil utils;
-	
+	private List<String> symbols;
+	private Date snapshot;
 
 	public BinanceProxy(BinanceDAO dao){
 		this.binanceDao = dao;
@@ -37,10 +40,30 @@ public class BinanceProxy implements ExchangeDAO{
 		}
 		return bars;
 	}
-
+	
 	@Override
 	public List<String> getAvailableSymbols() {
-		return binanceDao.getAvailableSymbols();
+		Calendar cal = Calendar.getInstance();
+		int today = cal.get(Calendar.DAY_OF_YEAR);
+		int snapshotDay = 0;
+		if(this.snapshot == null) {
+			snapshotDay = today;
+		} else {
+			Calendar c = Calendar.getInstance();
+			c.setTime(snapshot);
+			snapshotDay = c.get(Calendar.DAY_OF_YEAR);
+		}
+		//TODO implementar un serializable tambien
+		if(symbols == null || today != snapshotDay) {
+			symbols = binanceDao.getAvailableSymbols();
+		}
+		return symbols;
+	}
+
+	@Override
+	public List<Bar> getSymbolInfo(String symbol, Interval interva, int since) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

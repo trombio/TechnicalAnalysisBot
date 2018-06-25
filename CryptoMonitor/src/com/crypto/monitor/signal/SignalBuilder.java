@@ -28,7 +28,7 @@ public class SignalBuilder {
 	}
 
 	public void addTrendIndicator(TAIndicator ta, Indicator dataOrigin){
-		signal.addIndicator(ta.analyzeTrend(dataOrigin));
+		signal.addTrendIndicator(ta.analyzeTrend(dataOrigin));
 	}
 
 	public void setVolumeIndicator(TimeSeries series){

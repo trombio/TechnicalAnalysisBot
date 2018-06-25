@@ -1,13 +1,8 @@
 package com.crypto.monitor.signal;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.ta4j.core.Bar;
-import org.ta4j.core.Rule;
+import java.util.stream.Collectors;
 
 import com.crypto.jmes.bean.TrendIndicator;
 import com.crypto.jmes.bean.VolumeAnalysis;
@@ -18,18 +13,14 @@ import com.crypto.jmes.bean.VolumeAnalysis;
  *
  */
 public class Signal {
-
+	
 	private String symbol;
-
+	
 	private VolumeAnalysis volumeAnalysis;
 	private List<TrendIndicator> indicators;
-
+	
 	public Signal(){
 		indicators = new ArrayList<TrendIndicator>();
-	}
-
-	public void addIndicator(TrendIndicator indicator){
-		indicators.add(indicator);
 	}
 
 	public String getSymbol() {
@@ -47,9 +38,9 @@ public class Signal {
 	public void setIndicators(List<TrendIndicator> indicators) {
 		this.indicators = indicators;
 	}
-
+	
 	public void addTrendIndicator(TrendIndicator trend) {
-		indicators.add(trend);
+		indicators.add(trend);	
 	}
 
 	public VolumeAnalysis getVolumeAnalysis() {
@@ -59,12 +50,30 @@ public class Signal {
 	public void setVolumeAnalysis(VolumeAnalysis volumeAnalysis) {
 		this.volumeAnalysis = volumeAnalysis;
 	}
+	
+	public List<TrendIndicator> getBullishIndicatorsList(){
+		//List<TrendIndicator> b = indicators.stream().filter(i -> i.isBullish() == true).collect(Collectors.toList());
+		List<TrendIndicator> b = new ArrayList<>();
+		for(TrendIndicator t : indicators) {
+			if(t.isBullish())
+				b.add(t);
+		}
+		return b;
+	}
+	
+	public List<TrendIndicator> getBearishIndicatorsList(){
+		//List<TrendIndicator> b = indicators.stream().filter(i -> i.isBearish() == true).collect(Collectors.toList()); 
+		List<TrendIndicator> b = new ArrayList<>();
+		for(TrendIndicator t : indicators) {
+			if(t.isBearish())
+				b.add(t);
+		}
+		return b;
+	} 
 
 	@Override
 	public String toString() {
 		return "Signal [symbol=" + symbol + ", volumeAnalysis=" + volumeAnalysis + ", indicators=" + indicators + "]";
 	}
-
-
-
+	
 }

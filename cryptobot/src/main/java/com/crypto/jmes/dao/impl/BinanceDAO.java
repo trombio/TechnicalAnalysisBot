@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
 
@@ -20,6 +21,7 @@ import com.webcerebrium.binance.datatype.BinanceSymbol;
 public class BinanceDAO implements ExchangeDAO{
 	
 	private BinanceApi api;
+	private Logger log = Logger.getLogger(getClass());
 	
 	public BinanceDAO(){
 		api = new BinanceApi();
@@ -27,13 +29,27 @@ public class BinanceDAO implements ExchangeDAO{
 
 	@Override
 	public List<Bar> getSymbolInfo(String symbol, Interval interval) {
+		return this.getSymbolBars(symbol, interval, 0);
+	}
+	
+	@Override
+	public List<Bar> getSymbolInfo(String symbol, Interval interval, int since) {
+		return this.getSymbolBars(symbol, interval, since);
+	}
+	
+	private List<Bar> getSymbolBars(String symbol, Interval interval, int since){
 		List<Bar> bars = new ArrayList<Bar>();
 		try {
 			BinanceSymbol bs = new BinanceSymbol(symbol);
 			BinanceInterval bi = getBinanceInterval(interval);
 			
 			//candles information retrieved
-			List<BinanceCandlestick> candles = api.klines(bs, bi);
+			List<BinanceCandlestick> candles = null;
+			if(since > 0) {
+				candles = api.klines(bs, bi, since, null);
+			} else {
+				candles = api.klines(bs, bi);
+			}
 			for(BinanceCandlestick b : candles){
 				Date d = new Date(b.getCloseTime());
 				ZonedDateTime z = ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
@@ -47,21 +63,19 @@ public class BinanceDAO implements ExchangeDAO{
 				bars.add(bb);
 			}
 		} catch (BinanceApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error: ", e);
 		}
 		
 		return bars;
 	}
-
+	
 	@Override
 	public List<String> getAvailableSymbols() {
 		List<String> symbols = null;
 		try {
 			symbols = new ArrayList<String>(api.allBookTickersMap().keySet());
 		} catch (BinanceApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error: ", e);
 		}
 		return symbols;
 	}
@@ -78,6 +92,8 @@ public class BinanceDAO implements ExchangeDAO{
 		}
 				
 	}
+
+	
 	
 
 }
