@@ -4,6 +4,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<!-- html source code -->
+</h:head>
 <h3><p:outputLabel value="Monitor Crypto"></p:outputLabel></h3>
 <h:form>
 <div align="center">
@@ -15,17 +18,61 @@
 		<f:selectItem itemLabel="BNB" itemValue="BNB"></f:selectItem>
 	</p:selectOneButton>
 	
+	<p:outputLabel value="Fimeframe" for="interval"></p:outputLabel>
+	<p:selectOneButton id="interval" value="#{monitorBinance.interval}">
+		<f:selectItems value="#{monitorBinance.intervals}" var="i" itemValue="#{i}" itemLabel="#{i}"></f:selectItems>
+	</p:selectOneButton>
+	
 	<p:outputLabel value="Seleccione los indicadores" for="indicators"/>
 	<p:selectManyCheckbox id="indicators" value="#{monitorBinance.selectedIndicators}">
 		<f:selectItems value="#{monitorBinance.checkIndicators}" var="i" itemValue="#{i}" itemLabel="#{i}"></f:selectItems>
 	</p:selectManyCheckbox>	
 </p:panelGrid>
-</div>
 <p:commandButton value="Ver" actionListener="#{monitorBinance.execute}" update="signals"></p:commandButton>
-
-<p:scrollPanel id="signals" style="width:100%;height:500px" rendered="#{not empty monitorBinance.signals}">
-
+</div>
+<div align="center">
+<p:scrollPanel id="signals" style="width:90%;height:500px">
+	<div align="center">
+	<ui:repeat var="signal" value="#{monitorBinance.signals}">
+		<p:panelGrid style="margin-top:20px; width:90%">
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="6">Par: <p:outputLabel value="#{signal.symbol}"></p:outputLabel></p:column>
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column colspan="6" style="font-weight: bold;">Volumen</p:column>
+			</p:row>
+			<p:row>
+				<p:column>Last:</p:column>
+				<p:column><p:outputLabel value="#{signal.volumeAnalysis.avgVolume}"/></p:column>
+				<p:column>Average:</p:column>
+				<p:column><p:outputLabel value="#{signal.volumeAnalysis.lastVolume}"/></p:column>
+				<p:column>Highest:</p:column>
+				<p:column><p:outputLabel value="#{signal.volumeAnalysis.highestVolume}"/></p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="3"><center><b>Bullish</b></center></p:column>
+				<p:column colspan="3"><center><b>Bearish</b></center></p:column>
+			</p:row>
+			<p:row>
+				<p:column colspan="3">
+					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
+						<p:outputLabel value="#{trend.name}"/> : <p:outputLabel value="#{trend.value}"/>
+					</ui:repeat>
+				</p:column>
+				<p:column colspan="3">
+					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
+						<p:outputLabel value="#{trend.name}"/> : <p:outputLabel value="#{trend.value}"/>
+					</ui:repeat>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+		<br></br>
+	</ui:repeat>
+	</div>
 </p:scrollPanel>
+</div>
 </h:form>
 
 </html>

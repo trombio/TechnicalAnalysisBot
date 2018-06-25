@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
@@ -28,12 +29,27 @@ public class BinanceService implements ExchangeService{
 		binanceDao = new BinanceProxy(new BinanceDAO());
 	}
 	
+	@Override
 	public List<Bar> getCandles(String symbol, Interval interval) {
 		return binanceDao.getSymbolInfo(symbol, interval);
 	}
 	
+	@Override
+	public List<Bar> getCandles(String symbol, Interval interval, int since) {
+		return binanceDao.getSymbolInfo(symbol, interval, since);
+	}
+	
+	@Override
 	public List<String> getAllAvailableSymbols() {
 		return binanceDao.getAvailableSymbols();
 	}
+	
+	@Override
+	public List<String> getAllAvailableSymbols(String pair){
+		List<String> symbols = this.getAllAvailableSymbols();
+		return symbols.stream().filter(s -> s.contains(pair)).collect(Collectors.toList());
+	}
+
+	
 
 }
