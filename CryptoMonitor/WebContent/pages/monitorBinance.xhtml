@@ -80,19 +80,19 @@
 			</p:row>
 			<p:row>
 				<p:column colspan="3">
-					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
+					<ui:repeat var="trend" value="#{signal.bullishIndicators}">
 						<p:outputLabel value="#{trend.name}"/> :
 						<p:outputLabel value="#{trend.value}">
 							<f:convertNumber  maxFractionDigits="8" />
-						</p:outputLabel>
+						</p:outputLabel><b/>
 					</ui:repeat>
 				</p:column>
 				<p:column colspan="3">
-					<ui:repeat var="trend" value="#{signal.bullishIndicatorsList}">
+					<ui:repeat var="trend" value="#{signal.bullishIndicators}">
 						<p:outputLabel value="#{trend.name}"/> :
 						<p:outputLabel value="#{trend.value}">
 							<f:convertNumber  maxFractionDigits="8" />
-						</p:outputLabel>
+						</p:outputLabel><b/>
 					</ui:repeat>
 				</p:column>
 			</p:row>

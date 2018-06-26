@@ -83,7 +83,7 @@ public class MonitorManagedBean implements Serializable{
 		TAIndicator[] array = new TAIndicator[selectedIndicators.size()];
 		array = indicators.toArray(array);
 		Interval i = MonitorConstants.DEFAULT_INTERVALS.get(interval);
-
+		
 		signals = monitorService.getCryptoSignals(pair, i, array);
 		SignalUtils.orderByAverageVolume(signals);
 

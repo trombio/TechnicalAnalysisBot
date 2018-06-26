@@ -17,10 +17,12 @@ public class Signal {
 	private String symbol;
 	
 	private VolumeAnalysis volumeAnalysis;
-	private List<TrendIndicator> indicators;
+	private List<TrendIndicator> bullishIndicators;
+	private List<TrendIndicator> bearishIndicators;
 	
 	public Signal(){
-		indicators = new ArrayList<TrendIndicator>();
+		bullishIndicators = new ArrayList<TrendIndicator>();
+		bearishIndicators = new ArrayList<TrendIndicator>();
 	}
 
 	public String getSymbol() {
@@ -32,15 +34,25 @@ public class Signal {
 	}
 
 	public List<TrendIndicator> getTrendIndicators() {
+		List<TrendIndicator> indicators = new ArrayList<TrendIndicator>();
+		indicators.addAll(bearishIndicators);
+		indicators.addAll(bullishIndicators);
 		return indicators;
 	}
 
 	public void setIndicators(List<TrendIndicator> indicators) {
-		this.indicators = indicators;
+		for(TrendIndicator t : indicators) {
+			addTrendIndicator(t);
+		}
 	}
 	
 	public void addTrendIndicator(TrendIndicator trend) {
-		indicators.add(trend);	
+		if(trend.isBearish()) {
+			bearishIndicators.add(trend);
+		}
+		if(trend.isBullish()) {
+			bullishIndicators.add(trend);
+		}
 	}
 
 	public VolumeAnalysis getVolumeAnalysis() {
@@ -51,29 +63,17 @@ public class Signal {
 		this.volumeAnalysis = volumeAnalysis;
 	}
 	
-	public List<TrendIndicator> getBullishIndicatorsList(){
-		//List<TrendIndicator> b = indicators.stream().filter(i -> i.isBullish() == true).collect(Collectors.toList());
-		List<TrendIndicator> b = new ArrayList<>();
-		for(TrendIndicator t : indicators) {
-			if(t.isBullish())
-				b.add(t);
-		}
-		return b;
+	public List<TrendIndicator> getBullishIndicators() {
+		return bullishIndicators;
 	}
-	
-	public List<TrendIndicator> getBearishIndicatorsList(){
-		//List<TrendIndicator> b = indicators.stream().filter(i -> i.isBearish() == true).collect(Collectors.toList()); 
-		List<TrendIndicator> b = new ArrayList<>();
-		for(TrendIndicator t : indicators) {
-			if(t.isBearish())
-				b.add(t);
-		}
-		return b;
-	} 
+
+	public List<TrendIndicator> getBearishIndicators() {
+		return bearishIndicators;
+	}
 
 	@Override
 	public String toString() {
-		return "Signal [symbol=" + symbol + ", volumeAnalysis=" + volumeAnalysis + ", indicators=" + indicators + "]";
+		return "Signal [symbol=" + symbol + ", volumeAnalysis=" + volumeAnalysis + ", bullishIndicators="
+				+ bullishIndicators + ", bearishIndicators=" + bearishIndicators + "]";
 	}
-	
 }
