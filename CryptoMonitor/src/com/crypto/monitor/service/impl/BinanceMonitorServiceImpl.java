@@ -36,14 +36,13 @@ public class BinanceMonitorServiceImpl implements MonitorService{
 			log.info(">>>>>>Generando señal para: " + symbol);
 			List<Bar> bars = binanceService.getCandles(symbol, interval);
 			TimeSeries series = new BaseTimeSeries(bars);
-			SignalBuilder builder = new SignalBuilder(symbol);
+			SignalBuilder builder = new SignalBuilder(symbol, series);
 
+			builder.addVolumeIndicator();
 			//Agregamos los trendIndicators
 			for(TAIndicator tai : indicators){
-				builder.addTrendIndicator(tai, series);
+				builder.addTrendIndicator(tai);
 			}
-			//Agregamos el analisis de volumen
-			builder.setVolumeIndicator(series);
 
 			log.info(">>>>>Terminada señal para " + symbol);
 			signals.add(builder.build());

@@ -8,6 +8,7 @@ import org.ta4j.core.Bar;
 
 import com.crypto.jmes.dao.ExchangeDAO;
 import com.crypto.jmes.util.Interval;
+import com.crypto.jmes.util.IntervalUtil;
 import com.crypto.jmes.util.SerializeUtil;
 
 /**
@@ -34,6 +35,21 @@ public class BinanceProxy implements ExchangeDAO{
 		List<Bar> bars = null; 
 		if(utils.existsFile(symbol, interval.name())){
 			bars = utils.retrieveHistoryData(symbol, interval);
+			if(bars != null) {
+				Bar last = bars.get(bars.size() - 1);
+				int periods = IntervalUtil.getPeriodsFromBarUntilNow(last, interval);
+				if(periods > 0) {
+					List<Bar> updateBars = binanceDao.getSymbolInfo(symbol, interval, periods);
+					Bar first = updateBars.get(0);
+					int diff = IntervalUtil.getPeriodsFromBars(first, last, interval);
+					if(diff > interval.getValue()) {
+						throw new IllegalStateException("Too much difference between periods: " 
+							+ first.getEndTime() + " ," + last.getEndTime());
+					}
+					bars.addAll(updateBars);
+					utils.saveHistory(bars, symbol, interval);
+				} 
+			}
 		} else {
 			bars = binanceDao.getSymbolInfo(symbol, interval);
 			utils.saveHistory(bars, symbol, interval);

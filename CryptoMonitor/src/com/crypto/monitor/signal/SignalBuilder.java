@@ -2,6 +2,7 @@ package com.crypto.monitor.signal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.ta4j.core.Indicator;
 import org.ta4j.core.TimeSeries;
@@ -15,23 +16,22 @@ import com.crypto.jmes.ta.TAIndicator;
 public class SignalBuilder {
 
 	private Signal signal;
+	private List<TAIndicator> taIndicators;
+	private TimeSeries series;
 
-	public SignalBuilder(String simbol) {
+	public SignalBuilder(String simbol, TimeSeries series) {
 		signal = new Signal();
 		signal.setSymbol(simbol);
+		this.series = series;
+		taIndicators = new ArrayList<TAIndicator>();
 	}
 
 
-	public void addTrendIndicator(TAIndicator ta, TimeSeries series){
-		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
-		addTrendIndicator(ta, closePrice);
+	public void addTrendIndicator(TAIndicator ta){
+		taIndicators.add(ta);
 	}
-
-	public void addTrendIndicator(TAIndicator ta, Indicator dataOrigin){
-		signal.addTrendIndicator(ta.analyzeTrend(dataOrigin));
-	}
-
-	public void setVolumeIndicator(TimeSeries series){
+	
+	public void addVolumeIndicator(){
 		VolumeIndicator vol = new VolumeIndicator(series);
 
 		SMAIndicator sma = new SMAIndicator(vol, 20);
@@ -51,6 +51,11 @@ public class SignalBuilder {
 
 
 	public Signal build(){
+		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
+		for(TAIndicator ta : taIndicators) {
+			signal.addTrendIndicator(ta.analyzeTrend(closePrice));
+		}
+		
 		return signal;
 	}
 
